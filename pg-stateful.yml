@@ -1,0 +1,93 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres-movie
+spec:
+  serviceName: postgres-movie
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-movie
+  template:
+    metadata:
+      labels:
+        app: postgres-movie
+    spec:
+      containers:
+        - name: postgres-movie
+          image: postgres:15-alpine
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: pg-secrets
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pg-secrets
+                  key: POSTGRES_PASSWORD
+      volumes:
+        - name: postgres-db-disk-movie
+          hostPath:
+            path: /data
+  volumeClaimTemplates:
+    - metadata:
+        name: postgres-db-disk-movie
+      spec:
+        accessModes:
+          - "ReadWriteOnce"
+        resources:
+          requests:
+            storage: 1Gi
+
+---
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres-review
+spec:
+  serviceName: postgres-review
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-review
+  template:
+    metadata:
+      labels:
+        app: postgres-review
+    spec:
+      containers:
+        - name: postgres-review
+          image: postgres:15-alpine
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: pg-secrets
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pg-secrets
+                  key: POSTGRES_PASSWORD
+      volumes:
+        - name: postgres-db-disk--review
+          hostPath:
+            path: /data
+  volumeClaimTemplates:
+    - metadata:
+        name: postgres-db-disk--review
+      spec:
+        accessModes:
+          - "ReadWriteOnce"
+        resources:
+          requests:
+            storage: 1Gi
