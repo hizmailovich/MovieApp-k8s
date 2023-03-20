@@ -18,9 +18,3 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
-#          env:
-#            - name: EUREKA_HOST
-#              valueFrom:
-#                configMapKeyRef:
-#                  name: gateway-configmap
-#                  key: EUREKA_HOST
