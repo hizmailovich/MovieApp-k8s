@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: review
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: review
+  template:
+    metadata:
+      labels:
+        app: review
+    spec:
+      containers:
+        - name: review
+          image: hizmailovich/review:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8082
+          env:
+            - name: DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: pg-secrets
+                  key: POSTGRES_USER
+            - name: DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pg-secrets
+                  key: POSTGRES_PASSWORD
+            - name: DATASOURCE_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: review-configmap
+                  key: DATASOURCE_HOST
+            - name: MOVIE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: review-configmap
+                  key: MOVIE_URL
+            - name: BOOTSTRAP_SERVERS
+              valueFrom:
+                configMapKeyRef:
+                  name: review-configmap
+                  key: BOOTSTRAP_SERVERS

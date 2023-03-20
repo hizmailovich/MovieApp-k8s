@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: movie
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: movie
+  template:
+    metadata:
+      labels:
+        app: movie
+    spec:
+      containers:
+        - name: movie
+          image: hizmailovich/movie:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8081
+          env:
+            - name: DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: pg-secrets
+                  key: POSTGRES_USER
+            - name: DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pg-secrets
+                  key: POSTGRES_PASSWORD
+            - name: DATASOURCE_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: movie-configmap
+                  key: DATASOURCE_HOST
+            - name: REVIEW_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: movie-configmap
+                  key: REVIEW_URL
+            - name: BOOTSTRAP_SERVERS
+              valueFrom:
+                configMapKeyRef:
+                  name: movie-configmap
+                  key: BOOTSTRAP_SERVERS
