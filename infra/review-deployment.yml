@@ -39,6 +39,11 @@ spec:
                 configMapKeyRef:
                   name: review-configmap
                   key: MOVIE_URL
+            - name: RATING_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: review-configmap
+                  key: RATING_URL
             - name: BOOTSTRAP_SERVERS
               valueFrom:
                 configMapKeyRef:

@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rating
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rating
+  template:
+    metadata:
+      labels:
+        app: rating
+    spec:
+      containers:
+        - name: rating
+          image: hizmailovich/rating:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8083
+          env:
+            - name: MONGODB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-secrets
+                  key: MONGODB_USER
+            - name: MONGODB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-secrets
+                  key: MONGODB_PASSWORD
+            - name: DATASOURCE_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: rating-configmap
+                  key: DATASOURCE_NAME
+            - name: MONGODB_DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  name: rating-configmap
+                  key: MONGODB_DOMAIN
+            - name: BOOTSTRAP_SERVERS
+              valueFrom:
+                configMapKeyRef:
+                  name: rating-configmap
+                  key: BOOTSTRAP_SERVERS

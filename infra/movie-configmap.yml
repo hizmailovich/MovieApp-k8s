@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: movie-configmap
+data:
+  DATASOURCE_HOST: "postgres-movie"
+  REVIEW_URL: "http://review/api/v1/reviews"
+  BOOTSTRAP_SERVERS: "kafka-service"
